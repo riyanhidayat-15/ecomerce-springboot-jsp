@@ -1,4 +1,4 @@
-package com.daribangkubelakang.campus.belajar_jsp;
+package com.ecomerce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

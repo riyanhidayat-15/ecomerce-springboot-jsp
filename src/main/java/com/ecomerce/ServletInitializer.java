@@ -1,4 +1,4 @@
-package com.daribangkubelakang.campus.belajar_jsp;
+package com.ecomerce;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

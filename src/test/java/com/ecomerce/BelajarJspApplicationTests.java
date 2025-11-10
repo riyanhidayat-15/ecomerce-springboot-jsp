@@ -1,4 +1,4 @@
-package com.daribangkubelakang.campus.belajar_jsp;
+package com.ecomerce;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
