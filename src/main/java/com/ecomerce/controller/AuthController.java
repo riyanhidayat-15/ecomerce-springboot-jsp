@@ -1,6 +1,8 @@
 package com.ecomerce.controller;
 
+import com.ecomerce.model.Product;
 import com.ecomerce.model.User;
+import com.ecomerce.service.ProductService;
 import com.ecomerce.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 
 public class AuthController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProductService productService;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -31,11 +37,8 @@ public class AuthController {
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRole());
 
-            if("ADMIN".equals(user.getRole())) {
-                return "redirect:/admin/dashboard";
-            } else {
-                return "redirect:/";
-            }
+            return "redirect:/";
+
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             return "login";
