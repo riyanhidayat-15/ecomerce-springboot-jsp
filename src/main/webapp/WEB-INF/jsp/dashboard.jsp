@@ -10,11 +10,8 @@
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
+    <%@ include file="components/navbar.jsp" %>
     <div class="container">
-        <header class="header">
-            <h1>Dashboard</h1>
-            <p>Manajemen Produk</p>
-        </header>
 
         <main class="main-content">
             <section class="product-table">
