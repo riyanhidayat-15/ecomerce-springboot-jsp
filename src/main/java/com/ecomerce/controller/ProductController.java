@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,9 +36,11 @@ public class ProductController {
             @RequestParam String name,
             @RequestParam String description,
             @RequestParam BigDecimal price,
-            @RequestParam Integer stock) {
+            @RequestParam Integer stock,
+            @RequestParam("image") MultipartFile imagefile
+    ){
 
-        productService.addProduct(name, description, price, stock);
+        productService.addProduct(name, description, price, stock, imagefile);
 
         return "redirect:/admin/products";
     }

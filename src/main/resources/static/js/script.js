@@ -14,3 +14,14 @@
             modal.style.display = "none";
         }
  }
+
+  const fileInput = document.getElementById("imageInput");
+     const preview = document.getElementById("previewImage");
+
+     fileInput.addEventListener("change", function () {
+         const file = this.files[0];
+         if (file) {
+             preview.src = URL.createObjectURL(file);
+             preview.style.display = "block";
+         }
+     })

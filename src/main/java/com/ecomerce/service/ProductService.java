@@ -4,9 +4,12 @@ import com.ecomerce.model.Product;
 import com.ecomerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.net.http.HttpRequest;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -18,13 +21,31 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product addProduct(String name, String description, BigDecimal price, Integer stock) {
-        Product product = new Product();
-        product.setName(name);
-        product.setDescription(description);
-        product.setPrice(price);
-        product.setStock(stock);
-        return productRepository.save(product);
-    }
+    public Product addProduct(String name, String description, BigDecimal price, Integer stock, MultipartFile imageFile) {
+        String uploadDir = "uploads"; // root project
 
+        try {
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+            Files.copy(imageFile.getInputStream(), uploadPath.resolve(fileName));
+
+            Product product = new Product();
+            product.setName(name);
+            product.setDescription(description);
+            product.setPrice(price);
+            product.setStock(stock);
+            product.setImagePath("/uploads/" + fileName);
+
+            return productRepository.save(product);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Gagal upload file");
+        }
+
+    }
 }

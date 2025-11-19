@@ -24,6 +24,9 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
+    @Column(nullable = false)
+    private String imagePath;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -87,5 +90,13 @@ public class Product {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }
