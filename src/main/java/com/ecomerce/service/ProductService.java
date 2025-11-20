@@ -48,4 +48,39 @@ public class ProductService {
         }
 
     }
+
+    public Product editProduct(Long id, String name, String description, BigDecimal price, Integer stock, MultipartFile imageFile) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Produk tidak ditemukan"));
+
+        product.setName(name);
+        product.setDescription(description);
+        product.setPrice(price);
+        product.setStock(stock);
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String uploadDir = "uploads"; // root project
+
+            try {
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+                Files.copy(imageFile.getInputStream(), uploadPath.resolve(fileName));
+
+                product.setImagePath("/uploads/" + fileName);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Gagal upload file");
+            }
+        }
+
+        return productRepository.save(product);
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
 }

@@ -1,6 +1,7 @@
 <%--html--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -17,7 +18,7 @@
             <section class="product-table">
                 <div class="table-header">
                     <h2>Daftar Produk</h2>
-                    <button class="btn-add" onclick="openModal()">+ Tambah Produk</button>
+                    <button class="btn-add" onclick="openModal('add')">+ Tambah Produk</button>
 
                 </div>
 
@@ -45,8 +46,15 @@
                                     <td>${product.stock}</td>
 
                                     <td class="action">
-                                        <button class="btn-edit">Edit</button>
-                                        <button class="btn-delete">Hapus</button>
+                                        <button class="btn-edit"
+                                            data-id="${product.id}"
+                                            data-name="${fn:escapeXml(product.name)}"
+                                            data-price="${product.price}"
+                                            data-stock="${product.stock}"
+                                            data-desc="${fn:escapeXml(product.description)}"
+                                            data-image="${product.imagePath}"
+                                            onclick="openModal('edit', this)">Edit</button>
+                                        <button class="btn-delete" onclick="confirmDelete(${product.id})">Hapus</button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -59,27 +67,29 @@
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
 
-                <h3>Tambah Produk</h3>
+                <h3 id="modalTitle">Tambah Produk</h3>
 
-                <form action="${pageContext.request.contextPath}/admin/products/add" method="post" enctype="multipart/form-data">
+                <form id="productForm" data-base="${pageContext.request.contextPath}" action="${pageContext.request.contextPath}/admin/products/add" method="post" enctype="multipart/form-data">
+                   <input type="hidden" name="id" id="productId" />
+
                    <div class="form-group">
-                       <input type="text" name="name" placeholder="Nama Produk" required />
+                       <input id="nameInput" type="text" name="name" placeholder="Nama Produk" />
                    </div>
 
                    <div class="form-group">
-                       <input type="number" name="price" placeholder="Harga" required />
+                       <input id="priceInput" type="number" name="price" placeholder="Harga" />
                    </div>
 
                    <div class="form-group">
-                       <input type="number" name="stock" placeholder="Stok" required />
+                       <input id="stockInput" type="number" name="stock" placeholder="Stok" />
                    </div>
 
                    <div class="form-group">
-                       <textarea name="description" rows="3" placeholder="Deskripsi"></textarea>
+                       <textarea id="descriptionInput" name="description" rows="3" placeholder="Deskripsi"></textarea>
                    </div>
 
                    <div class="form-group">
-                       <input type="file" name="image" id="imageInput" accept="image/*" required />
+                       <input type="file" name="image" id="imageInput" accept="image/*" />
                    </div>
 
                    <div class="form-group" style="margin-top: 10px; text-align: center;">
@@ -90,6 +100,8 @@
                 </form>
             </div>
         </div>
+
+        <form id="deleteForm" data-base="${pageContext.request.contextPath}" method="post" style="display: none;"></form>
 
 
         <footer class="footer">
