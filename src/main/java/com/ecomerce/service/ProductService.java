@@ -83,4 +83,9 @@ public class ProductService {
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+
+    public Product getById(Long id) {
+        return productRepository.findById(id).orElseThrow(()-> new RuntimeException("Data Not found"));
+
+    }
 }

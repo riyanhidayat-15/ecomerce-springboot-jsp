@@ -5,6 +5,7 @@
 
 <div class="product-grid">
     <c:forEach var="product" items="${products}">
+    <a href="/products/${product.id}">
         <div class="product-card">
             <!-- Product Image -->
             <div class="product-image">
@@ -22,5 +23,6 @@
 
             </div>
         </div>
+    </a>
     </c:forEach>
 </div>

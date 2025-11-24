@@ -53,7 +53,7 @@ public class ProductController {
             @RequestParam String description,
             @RequestParam BigDecimal price,
             @RequestParam Integer stock,
-            @RequestParam(value = "image", required = false) MultipartFile imagefile
+            @RequestParam (value = "image", required = false) MultipartFile imagefile
     ){
         productService.editProduct(id, name, description, price, stock, imagefile);
         return "redirect:/admin/products";
@@ -64,4 +64,12 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/admin/products";
     }
+
+    @GetMapping("/products/{id}")
+    public String detailProduct(@PathVariable Long id, Model model) {
+        Product product = productService.getById(id);
+        model.addAttribute("product", product);
+        return "detailProduct";
+    }
+
 }
