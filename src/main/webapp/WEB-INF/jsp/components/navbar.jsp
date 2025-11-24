@@ -12,7 +12,9 @@
 
             <c:if test="${not empty sessionScope.username}">
                 <li><a href="/cart">🛒 Keranjang</a></li>
-                <li><a href="/admin/products">Dashboard</a></li>
+                <c:if test="${sessionScope.role == 'ADMIN'}">
+                    <li><a href="/admin/products">Dashboard</a></li>
+                </c:if>
             </c:if>
         </ul>
 
