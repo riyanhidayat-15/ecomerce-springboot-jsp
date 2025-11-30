@@ -13,7 +13,6 @@
 <body>
     <%@ include file="components/navbar.jsp" %>
     <div class="container">
-
         <main class="main-content">
             <section class="product-table">
                 <div class="table-header">

@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <link rel="stylesheet" href="/css/card.css"/>
 
 <div class="product-grid">
-    <c:forEach var="product" items="${products}">
+    <c:forEach var="product" varStatus="status" items="${products}" begin="0" end="9">
     <a href="/products/${product.id}">
         <div class="product-card">
             <!-- Product Image -->
@@ -12,7 +13,6 @@
                 <img src="${product.imagePath}" alt="${product.name}">
             </div>
 
-            <!-- Product Info -->
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
 
@@ -25,4 +25,11 @@
         </div>
     </a>
     </c:forEach>
+        <c:if test="${fn:length(products) > 10}">
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="${pageContext.request.contextPath}/products">
+                    Lihat Semua Produk (${fn:length(products)})
+                </a>
+            </div>
+        </c:if>
 </div>

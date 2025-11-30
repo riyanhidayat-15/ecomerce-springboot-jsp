@@ -62,21 +62,55 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button class="btn btn-secondary" onclick="addToCart()" ${product.stock == 0 ? 'disabled' : ''}>
-                        🛒 Tambah ke Keranjang
-                    </button>
-                    <button class="btn btn-primary" onclick="buyNow()" ${product.stock == 0 ? 'disabled' : ''}>
+                    <form action="/cart/add" method="POST">
+                        <input type="hidden" name="productId" value="${product.id}">
+                        <input type="hidden" id="qtyInput" name="qty" value="1">
+
+                        <button type="submit" class="btn btn-secondary"
+                            <c:if test="${product.stock == 0}">disabled</c:if>>
+                            🛒 Tambah ke Keranjang
+                        </button>
+                    </form>
+
+
+                    <button class="btn btn-primary" onclick="buyNow()"
+                        <c:if test="${product.stock == 0}">disabled</c:if>>
                         Beli Sekarang
                     </button>
+
                 </div>
 
             </div>
         </div>
     </div>
 
-    <script href="/js/detailProduct.js">
+    <script>
+    const quantityInput = document.getElementById('quantity');
+            const decreaseBtn = document.getElementById('decrease');
+            const increaseBtn = document.getElementById('increase');
+            const maxStock = ${product.stock};
+
+            decreaseBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+
+            increaseBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue < maxStock) {
+                    quantityInput.value = currentValue + 1;
+                }
+            });
+
+           function buyNow() {
+               const quantity = document.getElementById('quantity').value;
+               const productId = ${product.id};
+
+               window.location.href = "/buy-now?productId=" + productId + "&qty=" + quantity;
+           }
     </script>
 </body>
 </html>

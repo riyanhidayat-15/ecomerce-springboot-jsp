@@ -4,6 +4,7 @@ import com.ecomerce.model.Product;
 import com.ecomerce.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,14 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
+
+    @GetMapping("/products")
+    public String allProduct(Model model) {
+        List<Product> products = productService.getAllProducts();
+
+        model.addAttribute("products", products);
+        return "products";
+    }
 
     @GetMapping("/admin/products")
     public String admin(HttpSession session, Model model) {
