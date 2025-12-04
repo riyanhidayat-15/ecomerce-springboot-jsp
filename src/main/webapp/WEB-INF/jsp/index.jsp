@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>Product List</title>
 </head>
-<body style="padding: 0 8rem;">
+<body style="">
 <%@ include file="components/navbar.jsp" %>
 <%@ include file="components/banner.jsp" %>
 <%@ include file="components/card.jsp" %>

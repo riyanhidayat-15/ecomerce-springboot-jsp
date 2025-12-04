@@ -8,11 +8,11 @@
     <meta charset="UTF-8">
     <title>Product List</title>
 </head>
-<body style="padding: 4rem 8rem; font-family: Arial, sans-serif;">
+<body style="font-family: Arial, sans-serif;">
 <%@ include file="components/navbar.jsp" %>
 <link rel="stylesheet" href="/css/card.css"/>
 
-<div class="product-grid">
+<div class="product-grid" style="padding: 2rem; margin-top:4rem;">
     <c:forEach var="product" items="${products}">
     <a href="/products/${product.id}">
         <div class="product-card">

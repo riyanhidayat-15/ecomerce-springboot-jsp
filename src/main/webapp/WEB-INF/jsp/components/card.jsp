@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="/css/card.css"/>
 
-<div class="product-grid">
+<div class="product-grid" style="margin-top: 1.5rem;">
     <c:forEach var="product" varStatus="status" items="${products}" begin="0" end="9">
     <a href="/products/${product.id}">
         <div class="product-card">

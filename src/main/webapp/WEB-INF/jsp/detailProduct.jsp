@@ -72,12 +72,15 @@
                             🛒 Tambah ke Keranjang
                         </button>
                     </form>
+                    <form action="/checkout/create-direct" method="POST">
+                        <input type="hidden" name="productId" value="${product.id}">
+                        <input type="hidden" name="qty" value="1">
 
-
-                    <button class="btn btn-primary" onclick="buyNow()"
-                        <c:if test="${product.stock == 0}">disabled</c:if>>
-                        Beli Sekarang
-                    </button>
+                        <button type="submit" class="btn btn-primary"
+                            <c:if test="${product.stock == 0}">disabled</c:if>>
+                            Beli Sekarang
+                        </button>
+                    </form>
 
                 </div>
 
@@ -104,13 +107,6 @@
                     quantityInput.value = currentValue + 1;
                 }
             });
-
-           function buyNow() {
-               const quantity = document.getElementById('quantity').value;
-               const productId = ${product.id};
-
-               window.location.href = "/buy-now?productId=" + productId + "&qty=" + quantity;
-           }
     </script>
 </body>
 </html>

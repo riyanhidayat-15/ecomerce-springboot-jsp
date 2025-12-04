@@ -18,6 +18,7 @@
 
             body {
                 font-family: Arial, sans-serif;
+                padding: 0 1.5rem;
 
             }
 
@@ -45,9 +46,10 @@
 
             .carousel-item img {
                 width: 100%;
-                height:200px;
+                height:300px;
                 object-fit: cover;
                 display: block;
+                border-radius: 20px;
             }
 
             .btn-circle {
