@@ -43,4 +43,22 @@ public class OrderController {
         model.addAttribute("order", order);
         return "checkout";
     }
+
+    @GetMapping("/checkout/success")
+    public String successPage() {
+        return "success";
+    }
+
+    @GetMapping("/my-orders")
+    public String lihatPesanan(Model model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        List<Order> orders = orderService.getOrdersByUserId(userId);
+        model.addAttribute("orders", orders);
+
+        return "pesanan";
+    }
 }

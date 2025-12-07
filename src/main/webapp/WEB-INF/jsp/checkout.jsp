@@ -49,9 +49,8 @@
         </div>
     </div>
 
-    <!-- RIGHT: Payment & Summary -->
     <div>
-        <form action="/order/pay/${order.id}" method="POST">
+        <form action="/checkout/success" method="GET">
             <div class="card">
                 <h2 class="section-title">💳 Metode Pembayaran</h2>
                 <div class="payment-options">

@@ -7,15 +7,8 @@
         <a href="/" class="navbar-brand">🛍️ Jualin.com</a>
 
         <ul class="navbar-menu">
-            <li><a href="/">Home</a></li>
-            <li><a href="/products">Produk</a></li>
-
-            <c:if test="${not empty sessionScope.username}">
-                <li><a href="/cart">🛒 Keranjang</a></li>
-                <c:if test="${sessionScope.role == 'ADMIN'}">
-                    <li><a href="/admin/products">Dashboard</a></li>
-                </c:if>
-            </c:if>
+            <li><a href="/">Beranda</a></li>
+            <li><a href="/products">Semua Produk</a></li>
         </ul>
 
         <div class="navbar-search">
@@ -28,8 +21,19 @@
         <c:choose>
             <c:when test="${not empty sessionScope.username}">
                 <div class="navbar-auth">
-                    <span style="color: white; font-weight: 500;">👤 ${sessionScope.username}</span>
-                    <a href="/logout" class="btn btn-login">Logout</a>
+                    <button id="profileButton" class="profileButton">
+                        <span style="color: white; font-weight: 500;">${sessionScope.username}</span>
+                    </button>
+                    <div id="dropdownMenu" class="dropdownMenu hidden">
+                        <c:if test="${not empty sessionScope.username}">
+                            <a href="/cart">Keranjang</a>
+                            <a href="/my-orders"> Pesanan saya</a>
+                            <c:if test="${sessionScope.role == 'ADMIN'}">
+                                <a href="/admin/products">Dashboard</a>
+                            </c:if>
+                            <a href="/logout" class=" btn-login">Logout</a>
+                        </c:if>
+                    </div>
                 </div>
             </c:when>
             <c:otherwise>
@@ -41,3 +45,12 @@
         </c:choose>
     </div>
 </nav>
+
+<script>
+    const btn = document.getElementById("profileButton");
+    const menu = document.getElementById("dropdownMenu");
+
+    btn.onclick = () => {
+      menu.classList.toggle("show");
+    };
+</script>

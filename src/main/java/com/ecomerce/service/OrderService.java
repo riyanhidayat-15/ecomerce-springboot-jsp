@@ -38,7 +38,7 @@ public class OrderService {
 
         BigDecimal total = items.stream().map(item -> item.getPriceAtOrder().multiply(BigDecimal.valueOf(item.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Order order = new Order(user, orderNumber, total, "PENDING");
+        Order order = new Order(user, orderNumber, total, "DIKEMAS");
 
         orderRepository.save(order);
 
@@ -54,5 +54,9 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(()-> new RuntimeException("data not found"));
 
         return order;
+    }
+
+    public List<Order> getOrdersByUserId(Long userId) {
+       return orderRepository.findByUserIdOrderByIdDesc(userId);
     }
 }
