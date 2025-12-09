@@ -61,4 +61,16 @@ public class OrderController {
 
         return "pesanan";
     }
+
+    @GetMapping("/admin/orders")
+    public String showOrders(HttpSession session, Model model) {
+        if(!"ADMIN".equals(session.getAttribute("role"))) {
+            return "redirect:/login";
+        }
+
+        List<Order> orders = orderService.getAllOrders();
+        model.addAttribute("orders", orders);
+
+        return "components/orders";
+    }
 }

@@ -29,7 +29,7 @@
                             <a href="/cart">Keranjang</a>
                             <a href="/my-orders"> Pesanan saya</a>
                             <c:if test="${sessionScope.role == 'ADMIN'}">
-                                <a href="/admin/products">Dashboard</a>
+                                <a href="/admin/dashboard">Dashboard</a>
                             </c:if>
                             <a href="/logout" class=" btn-login">Logout</a>
                         </c:if>

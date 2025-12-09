@@ -50,6 +50,10 @@ public class OrderService {
         return order;
     }
 
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
     public Order getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(()-> new RuntimeException("data not found"));
 

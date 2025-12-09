@@ -1,145 +1,73 @@
-<%--html--%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%-- WEB-INF/jsp/components/sidebar.jsp --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+<%-- Font Awesome CDN --%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-        body {
-            color: #333;
-        }
+<div class="sidebar">
+    <a href="${pageContext.request.contextPath}/admin/dashboard" class="${page == 'dashboard' ? 'active' : ''}">
+        <i class="fas fa-chart-line"></i> Analytics
+    </a>
+    <a href="${pageContext.request.contextPath}/admin/products" class="${page == 'products' ? 'active' : ''}">
+        <i class="fas fa-box-open"></i> Products
+    </a>
+    <a href="${pageContext.request.contextPath}/admin/orders" class="${page == 'orders' ? 'active' : ''}">
+        <i class="fas fa-shopping-cart"></i> Orders
+    </a>
+    <a href="${pageContext.request.contextPath}/admin/reports" class="${page == 'reports' ? 'active' : ''}">
+        <i class="fas fa-file-alt"></i> Reports
+    </a>
+    <a href="${pageContext.request.contextPath}/admin/users" class="${page == 'users' ? 'active' : ''}">
+        <i class="fas fa-users"></i> Users
+    </a>
+</div>
 
-        .container {
-            display: flex;
-            min-height: 100vh;
-            padding-top: 60px;
-        }
+<style>
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 220px;
+        height: 100vh;
+        background: white;
+        margin-top: 80px;
+        margin-left: 10px;
+        padding: 20px 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        z-index: 100;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
 
-        .sidebar {
-            width: 220px;
-            background: white;
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+    .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: #333;
+        padding: 12px 20px;
+        font-size: 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
 
-        .sidebar button {
-            background: transparent;
-            border: none;
-            color: black;
-            padding: 14px 20px;
-            text-align: left;
-            font-size: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    .sidebar a:hover {
+        background: #4c7fff;
+        color: #fff;
+        transform: translateX(4px);
+    }
 
-        .sidebar button:hover {
-            background: #272833;
-            color: #fff;
-        }
+    .sidebar a.active {
+        background: #4c7fff;
+        color: #fff;
+        font-weight: bold;
+    }
 
-        .sidebar button.active {
-            background: #4c7fff;
-            color: white;
-            font-weight: bold;
-        }
-
-        /* --- CONTENT AREA --- */
-        .contents {
-            flex: 1;
-            padding: 25px;
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.2s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-</head>
-
-<body>
-<%@ include file="components/navbar.jsp" %>
-
-    <div class="container">
-
-        <div class="sidebar">
-            <button data-target="analytics" class="active">Analitycs</button>
-            <button data-target="products">Products</button>
-            <button data-target="orders">Orders</button>
-            <button data-target="reports">Reports</button>
-            <button data-target="users">Users</button>
-        </div>
-
-        <div class="contents">
-
-            <div id="analytics" class="page active">
-                <%@ include file="components/analytics.jsp" %>
-            </div>
-
-            <div id="products" class="page">
-                <%@ include file="components/products.jsp" %>
-            </div>
-
-            <div id="orders" class="page">
-                <%@ include file="components/orders.jsp" %>
-            </div>
-
-            <div id="reports" class="page">
-                <%@ include file="components/reports.jsp" %>
-            </div>
-
-            <div id="users" class="page">
-                <%@ include file="components/users.jsp" %>
-            </div>
-
-        </div>
-    </div>
-    <footer class="footer">
-                <p>&copy; 2025 Dashboard App. All rights reserved.</p>
-            </footer>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const buttons = document.querySelectorAll(".sidebar button");
-        const pages = document.querySelectorAll(".page");
-
-        buttons.forEach(btn => {
-            btn.addEventListener("click", () => {
-
-                buttons.forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-
-                const target = btn.dataset.target;
-                pages.forEach(p => p.classList.remove("active"));
-                document.getElementById(target).classList.add("active");
-            });
-        });
-    });
-</script>
-
-</body>
-</html>
+    .sidebar i {
+        width: 20px;
+        text-align: center;
+    }
+</style>

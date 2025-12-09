@@ -38,7 +38,7 @@ public class ProductController {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
 
-        return "dashboard";
+        return "components/products";
     }
 
     @PostMapping("/admin/products/add")
@@ -49,7 +49,6 @@ public class ProductController {
             @RequestParam Integer stock,
             @RequestParam("image") MultipartFile imagefile
     ){
-
         productService.addProduct(name, description, price, stock, imagefile);
 
         return "redirect:/admin/products";

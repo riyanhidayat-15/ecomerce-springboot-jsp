@@ -2,6 +2,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<c:set var="page" value="products" />
+
     <style>
         /* Reset & Base */
         * {
@@ -15,7 +17,8 @@
             background-color: #f4f6f9;
             color: #333;
             line-height: 1.6;
-        }
+            padding-left: 240px;
+            padding-top: 80px;        }
 
         .containerProduct {
             margin: 0 auto;
@@ -280,7 +283,9 @@
         }
 
     </style>
+    <%@ include file="navbar.jsp"%>
     <div class="containerProduct">
+        <%@ include file="../dashboard.jsp" %>
         <main class="main-content">
             <section class="product-table">
                 <div class="table-header">
