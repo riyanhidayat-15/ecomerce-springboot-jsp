@@ -310,12 +310,30 @@
                                 <tr>
                                     <td>${order.orderNumber}</td>
                                     <td>${order.user.username}</td>
-                                    <td>${order.totalPrice}</td>
-                                    <td>Rp ${order.status}</td>
+                                    <td>RP ${order.totalPrice}</td>
+                                    <td>${order.status}</td>
 
                                     <td class="action">
+                                        <c:choose>
 
+                                            <c:when test="${order.status == 'DIKEMAS'}">
+                                                <form action="/admin/orders/${order.id}/kirim" method="post">
+                                                    <input type="hidden" name="status" value="DIKIRIM">
+                                                    <button type="submit" class="btn-edit">Kirim</button>
+                                                </form>
+                                            </c:when>
+
+                                            <c:when test="${order.status == 'DIKIRIM'}">
+                                                <span style="color: gray;">Sedang Dikirim</span>
+                                            </c:when>
+
+                                            <c:when test="${order.status == 'SELESAI'}">
+                                                <span style="color: green;">Selesai</span>
+                                            </c:when>
+
+                                        </c:choose>
                                     </td>
+
                                 </tr>
                             </c:forEach>
                         </tbody>

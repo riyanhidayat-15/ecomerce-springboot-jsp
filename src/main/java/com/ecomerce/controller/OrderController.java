@@ -63,14 +63,29 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders")
-    public String showOrders(HttpSession session, Model model) {
+    public String getActiveOrders(HttpSession session, Model model) {
         if(!"ADMIN".equals(session.getAttribute("role"))) {
             return "redirect:/login";
         }
 
-        List<Order> orders = orderService.getAllOrders();
+        List<Order> orders = orderService.getOrderByStatuses(List.of("DIKEMAS", "DIKIRIM"));
         model.addAttribute("orders", orders);
 
         return "components/orders";
     }
+
+    @PostMapping("/admin/orders/{id}/kirim")
+    public String updateStatusFromAdmin(@PathVariable Long id) {
+        orderService.updateStatusOrder(id, "DIKIRIM");
+
+        return "redirect:/admin/orders";
+    }
+
+    @PostMapping("/my-orders/{id}/selesai")
+    public String updateStatusFromUser(@PathVariable Long id) {
+        orderService.updateStatusOrder(id, "SELESAI");
+
+        return "redirect:/my-orders";
+    }
+
 }

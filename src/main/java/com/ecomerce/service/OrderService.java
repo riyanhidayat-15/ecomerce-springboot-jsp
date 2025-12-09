@@ -6,6 +6,7 @@ import com.ecomerce.model.Product;
 import com.ecomerce.model.User;
 import com.ecomerce.repository.OrderItemRepository;
 import com.ecomerce.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,14 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    public List<Order> getOrderByStatus(String status) {
+        return orderRepository.findByStatus(status);
+    }
+
+    public List<Order> getOrderByStatuses(List<String> statuses) {
+        return orderRepository.findByStatusIn(statuses);
+    }
+
     public Order getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(()-> new RuntimeException("data not found"));
 
@@ -62,5 +71,12 @@ public class OrderService {
 
     public List<Order> getOrdersByUserId(Long userId) {
        return orderRepository.findByUserIdOrderByIdDesc(userId);
+    }
+
+    @Transactional
+    public void updateStatusOrder(Long orderId, String status) {
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new RuntimeException("Data not found"));
+
+        order.setStatus(status);
     }
 }
