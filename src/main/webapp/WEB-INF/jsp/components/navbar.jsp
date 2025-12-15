@@ -26,6 +26,7 @@
                     </button>
                     <div id="dropdownMenu" class="dropdownMenu hidden">
                         <c:if test="${not empty sessionScope.username}">
+                            <a href="/profile/edit">Profil</a>
                             <a href="/cart">Keranjang</a>
                             <a href="/my-orders"> Pesanan saya</a>
                             <c:if test="${sessionScope.role == 'ADMIN'}">

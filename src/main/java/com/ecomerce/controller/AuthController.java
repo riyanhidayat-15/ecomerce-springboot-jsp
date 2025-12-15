@@ -71,5 +71,47 @@ public class AuthController {
         return "redirect:/login";
     }
 
+    @GetMapping("/profile/edit")
+    public String editProfile(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+        return "profile";
+    }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(
+            @RequestParam String username,
+            @RequestParam String email,
+            @RequestParam(required = false) String telepon,
+            @RequestParam(required = false) String address,
+            HttpSession session,
+            Model model
+    ) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            User current = userService.getUserById(userId);
+            userService.updateUser(userId, username, email, telepon, address, current.getRole());
+
+            // update session username if changed
+            session.setAttribute("username", username);
+            model.addAttribute("success", "Profil berhasil diperbarui");
+            model.addAttribute("user", userService.getUserById(userId));
+            return "profile";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("user", userService.getUserById(userId));
+            return "profile";
+        }
+    }
+
 
 }

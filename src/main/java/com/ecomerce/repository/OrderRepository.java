@@ -20,4 +20,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
         ORDER BY MONTH(o.createdAt)
     """)
     List<Object[]> getMonthlySales();
+
+    @Query("SELECT SUM(o.totalPrice) FROM Order o")
+    java.math.BigDecimal getTotalRevenue();
+
+    @Query("SELECT o.status, COUNT(o) FROM Order o GROUP BY o.status")
+    List<Object[]> getCountsByStatus();
 }
