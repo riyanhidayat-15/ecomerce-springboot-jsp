@@ -1,11 +1,10 @@
 package com.ecomerce.service;
 
-import com.ecomerce.model.Order;
-import com.ecomerce.model.OrderItem;
-import com.ecomerce.model.Product;
-import com.ecomerce.model.User;
+import com.ecomerce.model.*;
+import com.ecomerce.repository.CartRepository;
 import com.ecomerce.repository.OrderItemRepository;
 import com.ecomerce.repository.OrderRepository;
+import com.ecomerce.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,12 @@ public class OrderService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     public OrderItem createOrderItem (Long productId, int qty) {
         Product product = productService.getById(productId);
@@ -79,4 +84,40 @@ public class OrderService {
 
         order.setStatus(status);
     }
+
+    @Transactional
+    public Order createOrderFromCart(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User tidak ditemukan"));
+
+        List<Cart> carts = cartRepository.findByUserId(userId);
+        if (carts.isEmpty()) {
+            throw new RuntimeException("Cart kosong");
+        }
+
+        String orderNumber = "ORD" + System.currentTimeMillis();
+
+        BigDecimal total = carts.stream()
+                .map(c -> c.getProduct().getPrice()
+                        .multiply(BigDecimal.valueOf(c.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Order order = new Order(user, orderNumber, total, "DIKEMAS");
+        orderRepository.save(order);
+
+        for (Cart cart : carts) {
+            OrderItem item = new OrderItem();
+            item.setOrder(order);
+            item.setProduct(cart.getProduct());
+            item.setQuantity(cart.getQuantity());
+            item.setPriceAtOrder(cart.getProduct().getPrice());
+
+            orderItemRepository.save(item);
+        }
+
+        cartRepository.deleteByUserId(userId);
+
+        return order;
+    }
+
 }

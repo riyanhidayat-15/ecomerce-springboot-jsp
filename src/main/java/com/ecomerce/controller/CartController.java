@@ -1,7 +1,9 @@
 package com.ecomerce.controller;
 
 import com.ecomerce.model.Cart;
+import com.ecomerce.model.Order;
 import com.ecomerce.service.CartService;
+import com.ecomerce.service.OrderService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ import java.util.List;
 public class CartController {
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private OrderService orderService;
 
     @PostMapping("/add")
     public String addToCart(@RequestParam Long productId, @RequestParam int qty, HttpSession session) {
@@ -76,4 +81,7 @@ public class CartController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
+
 }

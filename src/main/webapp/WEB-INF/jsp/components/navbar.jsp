@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/css/navbar.css"/>
 <nav class="navbar">
     <div class="navbar-container">
-        <a href="/" class="navbar-brand">🛍️ Jualin.com</a>
+        <a href="/" class="navbar-brand">📡 TechNova</a>
 
         <ul class="navbar-menu">
             <li><a href="/">Beranda</a></li>

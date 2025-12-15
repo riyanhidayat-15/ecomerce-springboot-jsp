@@ -35,8 +35,8 @@ for i in range(20):
 
     shutil.copy(src_path, dst_path)
 
-    product_name = f"Produk Dummy {i}"
-    product_desc = "Ini adalah produk dummy untuk testing."
+    product_name = f"Apple Product {i}"
+    product_desc = "Produk original Apple untuk kebutuhan kerja, hiburan, dan produktivitas"
     price = random.randint(10000, 500000)
     stock = random.randint(10, 50)
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

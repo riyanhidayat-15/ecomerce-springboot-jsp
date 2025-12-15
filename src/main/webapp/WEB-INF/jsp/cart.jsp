@@ -15,7 +15,7 @@
 
 <div class="page">
 
-    <!-- LEFT LIST -->
+    <!-- LEFT -->
     <div class="cart-left">
         <div class="cart-title">Keranjang</div>
 
@@ -27,18 +27,19 @@
             <div style="color:red; cursor:pointer;" onclick="deleteSelected()">Hapus</div>
         </div>
 
-        <c:set var="total" value="0"/>
+        <c:forEach var="item" items="${carts}">
+            <div class="cart-card"
+                 data-cart-id="${item.id}"
+                 data-price="${item.product.price}">
 
-        <c:forEach var="item" items="${carts}" varStatus="status">
-            <div class="cart-card" data-cart-id="${item.id}" data-price="${item.product.price}">
+                <input type="checkbox"
+                       class="item-checkbox"
+                       onchange="updateSummary()">
 
-                <input type="checkbox" class="item-checkbox" onchange="updateSummary()">
-
-                <img src="${item.product.imagePath}" class="cart-img" />
+                <img src="${item.product.imagePath}" class="cart-img"/>
 
                 <div class="info">
                     <div class="store-name">Toko — ${item.product.name}</div>
-
                     <div class="p-name">${item.product.name}</div>
                     <div class="p-price">
                         Rp <fmt:formatNumber value="${item.product.price}" pattern="#,##0"/>
@@ -47,7 +48,7 @@
 
                 <div class="qty">
                     <button onclick="decreaseQty(${item.id})">-</button>
-                    <input type="text" id="qty-${item.id}" value="${item.quantity}" readonly />
+                    <input type="text" id="qty-${item.id}" value="${item.quantity}" readonly/>
                     <button onclick="increaseQty(${item.id})">+</button>
                 </div>
 
@@ -57,11 +58,10 @@
 
                 <div class="delete" onclick="deleteItem(${item.id})">Hapus</div>
             </div>
-
-            <c:set var="total" value="${total + (item.product.price * item.quantity)}"/>
         </c:forEach>
     </div>
 
+    <!-- RIGHT SUMMARY -->
     <div class="summary">
         <div class="sum-title">Ringkasan Belanja</div>
 
@@ -70,9 +70,12 @@
             <span class="sum-total" id="totalPrice">Rp 0</span>
         </div>
 
-        <button class="checkout-btn" onclick="checkout()">
-            Beli (<span id="selectedCount">0</span>)
-        </button>
+        <!-- CHECKOUT FORM (POST) -->
+        <form action="/checkout/create-from-cart" method="post">
+            <button type="submit" class="checkout-btn">
+                Beli (<span id="selectedCount">0</span>)
+            </button>
+        </form>
     </div>
 
 </div>
@@ -80,157 +83,86 @@
 <script>
 function toggleSelectAll() {
     const selectAll = document.getElementById('selectAll');
-    const checkboxes = document.querySelectorAll('.item-checkbox');
-
-    checkboxes.forEach(cb => {
-        cb.checked = selectAll.checked;
-    });
-
+    document.querySelectorAll('.item-checkbox')
+        .forEach(cb => cb.checked = selectAll.checked);
     updateSummary();
 }
 
 function updateSummary() {
-    const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+    const checked = document.querySelectorAll('.item-checkbox:checked');
     let total = 0;
-    let count = 0;
 
-    checkboxes.forEach(cb => {
+    checked.forEach(cb => {
         const card = cb.closest('.cart-card');
         const price = parseFloat(card.dataset.price);
-        const qtyInput = card.querySelector('input[type="text"]');
-        const qty = parseInt(qtyInput.value);
-
+        const qty = parseInt(card.querySelector('input[type="text"]').value);
         total += price * qty;
-        count++;
     });
 
     document.getElementById('totalPrice').textContent =
         'Rp ' + total.toLocaleString('id-ID');
-    document.getElementById('selectedCount').textContent = count;
+    document.getElementById('selectedCount').textContent = checked.length;
 
-    const allCheckboxes = document.querySelectorAll('.item-checkbox');
-    const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
-    document.getElementById('selectAll').checked = allChecked && allCheckboxes.length > 0;
+    const all = document.querySelectorAll('.item-checkbox');
+    document.getElementById('selectAll').checked =
+        all.length > 0 && checked.length === all.length;
 }
 
 function increaseQty(cartId) {
-    const qtyInput = document.getElementById('qty-' + cartId);
-    let qty = parseInt(qtyInput.value);
-    qty++;
-    qtyInput.value = qty;
-
-    // Update to backend
-    updateQuantity(cartId, qty);
+    const input = document.getElementById('qty-' + cartId);
+    input.value = parseInt(input.value) + 1;
+    syncQty(cartId, input.value);
 }
 
 function decreaseQty(cartId) {
-    const qtyInput = document.getElementById('qty-' + cartId);
-    let qty = parseInt(qtyInput.value);
-
-    if (qty > 1) {
-        qty--;
-        qtyInput.value = qty;
-
-        // Update to backend
-        updateQuantity(cartId, qty);
+    const input = document.getElementById('qty-' + cartId);
+    if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
+        syncQty(cartId, input.value);
     }
 }
 
-function updateQuantity(cartId, quantity) {
-    // Update subtotal display immediately
-    updateItemSubtotal(cartId, quantity);
+function syncQty(cartId, qty) {
+    updateSubtotal(cartId, qty);
     updateSummary();
 
     fetch('/cart/update', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'cartId=' + cartId + '&quantity=' + quantity
-    })
-    .then(response => {
-        if (!response.ok) {
-            alert('Gagal update quantity');
-            location.reload();
-        }
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'cartId=' + cartId + '&quantity=' + qty
+    }).then(res => {
+        if (!res.ok) location.reload();
     });
 }
 
-function updateItemSubtotal(cartId, quantity) {
+function updateSubtotal(cartId, qty) {
     const card = document.querySelector('[data-cart-id="' + cartId + '"]');
     const price = parseFloat(card.dataset.price);
-    const subtotal = price * quantity;
-
-    const subtotalEl = card.querySelector('.item-subtotal');
-    subtotalEl.textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
+    card.querySelector('.item-subtotal').textContent =
+        'Rp ' + (price * qty).toLocaleString('id-ID');
 }
 
 function deleteItem(cartId) {
-    if (confirm('Yakin ingin menghapus item ini?')) {
-        fetch('/cart/delete/' + cartId, {
-            method: 'POST'
-        })
-        .then(response => {
-            if (response.ok) {
-                location.reload();
-            }
-        });
-    }
+    if (!confirm('Hapus item ini?')) return;
+    fetch('/cart/delete/' + cartId, { method: 'POST' })
+        .then(res => res.ok && location.reload());
 }
 
 function deleteSelected() {
-    const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+    const ids = Array.from(document.querySelectorAll('.item-checkbox:checked'))
+        .map(cb => cb.closest('.cart-card').dataset.cartId);
 
-    if (checkboxes.length === 0) {
-        alert('Pilih item yang ingin dihapus');
-        return;
-    }
+    if (ids.length === 0) return alert('Pilih item dulu');
+    if (!confirm('Hapus ' + ids.length + ' item?')) return;
 
-    if (confirm('Yakin ingin menghapus ' + checkboxes.length + ' item?')) {
-        const cartIds = [];
-        checkboxes.forEach(cb => {
-            const card = cb.closest('.cart-card');
-            cartIds.push(card.dataset.cartId);
-        });
-
-        fetch('/cart/delete-multiple', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(cartIds)
-        })
-        .then(response => {
-            if (response.ok) {
-                location.reload();
-            }
-        });
-    }
+    fetch('/cart/delete-multiple', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ids)
+    }).then(res => res.ok && location.reload());
 }
 
-// Checkout
-function checkout() {
-    const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-
-    if (checkboxes.length === 0) {
-        alert('Pilih item yang ingin dibeli');
-        return;
-    }
-
-    const cartIds = [];
-    checkboxes.forEach(cb => {
-        const card = cb.closest('.cart-card');
-        cartIds.push(card.dataset.cartId);
-    });
-
-    // Redirect to checkout with selected items
-    window.location.href = '/checkout?cartIds=' + cartIds.join(',');
-}
-
-// Initialize on page load
-window.onload = function() {
-    updateSummary();
-};
+window.onload = updateSummary;
 </script>
 
 </body>

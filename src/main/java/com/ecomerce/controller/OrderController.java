@@ -88,4 +88,17 @@ public class OrderController {
         return "redirect:/my-orders";
     }
 
+    @PostMapping("/checkout/create-from-cart")
+    public String createOrderFromCart(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        Order order = orderService.createOrderFromCart(userId);
+
+        return "redirect:/checkout/" + order.getId();
+    }
+
 }
